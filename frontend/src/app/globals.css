@@ -1,0 +1,16 @@
+@import "tailwindcss";
+
+@theme {
+  /* This automatically creates utilities like bg-herbal-dark and text-herbal-accent */
+  --color-herbal-dark: #1C2B24;
+  --color-herbal-primary: #2E4A3F;
+  --color-herbal-accent: #D4AF37;
+  --color-herbal-cream: #F9F8F3;
+  --color-herbal-muted: #7D8A83;
+}
+
+/* Force the base canvas onto your premium brand identity green */
+body {
+  background-color: #1C2B24;
+  color: #F9F8F3;
+}
