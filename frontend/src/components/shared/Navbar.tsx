@@ -6,9 +6,16 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, ShoppingBag, Search, User } from "lucide-react";
 import { NAV_LINKS } from "@/constants/navigation";
 import { FADE_UP, SMOOTH_SPRING } from "@/constants/motion";
+import { useCart } from "@/context/CartContext";
+import CartDrawer from "../CartDrawer"; // Adjust this path relative to your directory structure
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
+  const [isCartOpen, setIsCartOpen] = useState(false);
+  const { cart } = useCart();
+
+  // Dynamically compute absolute allocation quantities 
+  const totalItemCount = cart?.items.reduce((acc, item) => acc + item.quantity, 0) || 0;
 
   return (
     <>
@@ -51,14 +58,25 @@ export default function Navbar() {
             <button className="text-herbal-cream/80 hover:text-white transition-colors p-1" aria-label="Account">
               <User className="w-5 h-5 stroke-[1.5]" />
             </button>
-            <button className="text-herbal-cream/80 hover:text-white transition-colors p-1 relative" aria-label="Cart">
+            
+            {/* Reactive Cart Trigger */}
+            <button 
+              onClick={() => setIsCartOpen(true)}
+              className="text-herbal-cream/80 hover:text-white transition-colors p-1 relative bg-transparent border-none cursor-pointer" 
+              aria-label="Cart"
+            >
               <ShoppingBag className="w-5 h-5 stroke-[1.5]" />
-              <span className="absolute -top-1 -right-1.5 w-4 h-4 bg-herbal-accent text-herbal-dark text-[10px] font-bold rounded-full flex items-center justify-between justify-center scale-90" />
+              
+              {totalItemCount > 0 && (
+                <span className="absolute -top-1 -right-1.5 w-4 h-4 bg-herbal-accent text-herbal-dark text-[10px] font-bold rounded-full flex items-center justify-center scale-90 animate-fade-in">
+                  {totalItemCount}
+                </span>
+              )}
             </button>
             
             {/* Mobile Trigger Button */}
             <button 
-              className="md:hidden text-white p-1 ml-1"
+              className="md:hidden text-white p-1 ml-1 bg-transparent border-none cursor-pointer"
               onClick={() => setIsOpen(!isOpen)}
               aria-label="Toggle Menu"
             >
@@ -100,6 +118,9 @@ export default function Navbar() {
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* Slide-out Global Cart Drawer Module */}
+      <CartDrawer isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
     </>
   );
 }

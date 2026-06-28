@@ -16,7 +16,7 @@ export default function Hero() {
           transition={{ duration: 1.6, ease: [0.16, 1, 0.3, 1] }}
           className="w-full h-full bg-cover bg-center"
           style={{ 
-            backgroundImage: '/hero-background.png'
+            backgroundImage: "url('/hero-background.png')" //  Fixed path string wrapper
           }}
         />
         {/* Cinematic Linear Shadow Mask */}

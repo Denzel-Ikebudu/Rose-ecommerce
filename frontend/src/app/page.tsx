@@ -1,33 +1,31 @@
 import Navbar from "@/components/shared/Navbar";
 import Hero from "@/components/shared/Hero";
-import ProductGrid from "@/components/shared/ProductGrid";
+import FeaturedProducts from "@/components/shared/FeaturedProducts";
 
 async function getProducts() {
   try {
-    // Hits your Django running backend endpoint natively over localhost
     const response = await fetch("http://127.0.0.1:8000/api/products/", {
-      cache: "no-store", // Ensures data resets instantly when you make admin changes
+      cache: "no-store",
     });
-    
-    if (!response.ok) {
-      throw new Error(`API fetch exception status: ${response.status}`);
-    }
-    
+    if (!response.ok) throw new Error(`API error status: ${response.status}`);
     return await response.json();
   } catch (error) {
-    console.error("Database connection failure on backend pipe:", error);
-    return []; // Return empty array to keep UI stable during server resets
+    console.error("Database connection failure:", error);
+    return [];
   }
 }
 
 export default async function Home() {
-  const products = await getProducts();
+  const allProducts = await getProducts();
+  
+  // Slice the database payload to strictly grab just the first 3 items
+  const featuredDbSlice = allProducts.slice(0, 3);
 
   return (
     <main className="min-h-screen bg-herbal-dark antialiased selection:bg-herbal-accent selection:text-herbal-dark">
       <Navbar />
       <Hero />
-      <ProductGrid products={products} />
+      <FeaturedProducts products={featuredDbSlice} />
     </main>
   );
 }
