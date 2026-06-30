@@ -132,3 +132,12 @@ SIMPLE_JWT = {
 SESSION_COOKIE_SAMESITE = 'Lax'
 SESSION_COOKIE_SECURE = False  # Set to True only in production when using HTTPS
 SESSION_COOKIE_HTTPONLY = True
+
+# 1. Required by django-allauth to identify the current site instance
+SITE_ID = 1
+
+# 2. Prevent crashes if django-allauth tries to send verification emails
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+# 3. Tell Django it's safely behind Render's HTTPS reverse proxy
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
