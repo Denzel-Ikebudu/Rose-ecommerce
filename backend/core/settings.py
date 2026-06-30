@@ -1,4 +1,5 @@
 import os
+import dj_database_url
 from pathlib import Path
 import environ
 from datetime import timedelta
@@ -65,7 +66,10 @@ WSGI_APPLICATION = 'core.wsgi.application'
 
 # Database Configuration linked to PostgreSQL
 DATABASES = {
-    'default': env.db('DATABASE_URL')
+    'default': dj_database_url.config(
+        default='sqlite:///' + os.path.join(BASE_DIR, 'db.sqlite3'),
+        conn_max_age=600
+    )
 }
 
 # Password validation
@@ -84,6 +88,7 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 STATIC_URL = 'static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
