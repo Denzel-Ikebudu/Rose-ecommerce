@@ -3,6 +3,8 @@
 import React, { useState, useEffect } from "react";
 import { Search, Loader2, ShoppingBag, SlidersHorizontal, ArrowLeft } from "lucide-react";
 import Link from "next/link";
+import { useCart } from "@/context/CartContext";
+import CartDrawer from "@/components/CartDrawer";
 
 interface Product {
   id: number;
@@ -19,6 +21,13 @@ interface Category {
 }
 
 export default function ShopPage() {
+  // Local drawer state matching your navbar's operational pattern
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const { cart } = useCart();
+
+  // Compute item count exactly how your navbar does it
+  const totalItemCount = cart?.items.reduce((acc, item) => acc + item.quantity, 0) || 0;
+
   // Core Inventory & Interaction States
   const [products, setProducts] = useState<Product[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
@@ -32,11 +41,11 @@ export default function ShopPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // 1. Handle Debouncing for Server Search Lookups (Option B Optimizer)
+  // 1. Handle Debouncing for Server Search Lookups
   useEffect(() => {
     const handler = setTimeout(() => {
       setDebouncedSearch(searchQuery);
-    }, 400); // Wait for 400ms pause before hitting Django
+    }, 400);
 
     return () => clearTimeout(handler);
   }, [searchQuery]);
@@ -65,8 +74,6 @@ export default function ShopPage() {
       
       try {
         const params = new URLSearchParams();
-        
-        // Only append filters if they hold valid non-default states
         if (selectedCategory && selectedCategory !== "all") {
           params.append("category", selectedCategory);
         }
@@ -74,9 +81,7 @@ export default function ShopPage() {
           params.append("search", debouncedSearch.trim());
         }
         
-        // Perfectly bind params using template literals to avoid string concat drops
         const url = `http://localhost:8000/api/products/?${params.toString()}`;
-        
         const res = await fetch(url);
         if (!res.ok) throw new Error("Transmission error fetching catalog records.");
         
@@ -102,18 +107,37 @@ export default function ShopPage() {
             <Link href="/" className="inline-flex items-center gap-2 text-xs font-medium tracking-widest uppercase text-[#F9F8F3]/60 hover:text-[#D4AF37] transition-colors duration-200">
               <ArrowLeft className="w-4 h-4" /> Back to Home
             </Link>
-            <h1 className="font-serif text-4xl md:text-5xl font-light tracking-tight mt-6">The Apothecary Shop</h1>
+            <h1 className="font-serif text-4xl md:text-5xl font-light tracking-tight mt-6">The Shop</h1>
             <p className="text-[#F9F8F3]/60 text-sm font-light mt-2">Explore our full ecosystem of premium botanical formulations.</p>
           </div>
           
-          {/* Active Counters */}
-          <div className="text-xs font-medium uppercase tracking-widest text-[#D4AF37] bg-[#D4AF37]/5 border border-[#D4AF37]/20 px-4 py-2 rounded-full self-start md:self-auto">
-            Showing {products.length} Formulations
+          {/* Active Counters & Interactive Action Controls */}
+          <div className="flex items-center gap-4 self-start md:self-auto">
+            
+            {/* Implemented Cart Button matching your precise setup specs */}
+            <button 
+              onClick={() => setIsDrawerOpen(true)}
+              className="flex gap-1 items-center text-black rounded-[30px] transition-colors px-4 py-2 relative bg-white border-none cursor-pointer text-xs font-medium uppercase tracking-wider" 
+              aria-label="Cart"
+            >
+              Cart
+              <ShoppingBag className="w-4 h-4 stroke-[1.5]" />
+              
+              {totalItemCount > 0 && (
+                <span className="absolute -top-1 -right-1.5 w-4 h-4 bg-herbal-accent text-herbal-dark text-[10px] font-bold rounded-full flex items-center justify-center scale-90 animate-fade-in">
+                  {totalItemCount}
+                </span>
+              )}
+            </button>
+
+            <div className="text-xs font-medium uppercase tracking-widest text-[#D4AF37] bg-[#D4AF37]/5 border border-[#D4AF37]/20 px-4 py-2 rounded-full">
+              Showing {products.length} products
+            </div>
           </div>
         </div>
 
         {/* --- SYSTEM FILTER AND CONTROLS LAYOUT --- */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-12 items-center bg-white/5 border border-white/10 p-6 rounded-2xl backdrop-blur-sm">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-12 items-center bg-white/5 border border-white/10 p-2 rounded-2xl backdrop-blur-sm">
           
           {/* Search Query Input Zone */}
           <div className="lg:col-span-4 relative flex items-center">
@@ -185,9 +209,8 @@ export default function ShopPage() {
             {products.map((product) => (
               <div 
                 key={product.id} 
-                className="group flex flex-col bg-white/5 border border-white/10 rounded-2xl overflow-hidden backdrop-blur-sm hover:border-[#D4AF37]/30 transition-all duration-500"
+                className="group h-[400px] flex flex-col bg-white/5 border border-white/10 rounded-2xl overflow-hidden backdrop-blur-sm hover:border-[#D4AF37]/30 transition-all duration-500"
               >
-                {/* Wrap clickable image card segment inside dynamic navigation anchor */}
                 <Link href={`/shop/${product.id}`} className="cursor-pointer block relative aspect-[4/5] bg-[#1C2B24]/40 overflow-hidden border-b border-white/10">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
@@ -198,7 +221,6 @@ export default function ShopPage() {
                   <div className="absolute inset-0 bg-gradient-to-t from-[#1C2B24]/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                 </Link>
 
-                {/* Information Metadata Box */}
                 <div className="p-6 flex flex-col flex-grow justify-between gap-4">
                   <div>
                     <Link href={`/shop/${product.id}`} className="cursor-pointer block flex items-start justify-between gap-4 mb-2 group/title">
@@ -213,11 +235,11 @@ export default function ShopPage() {
                       {product.description}
                     </p>
                   </div>
-
-                  {/* Add To Cart / Direct Action Trigger */}
+                  <Link href={`/shop/${product.id}`}>
                   <button className="w-full bg-[#1C2B24] text-[#F9F8F3] hover:bg-[#D4AF37] hover:text-[#1C2B24] border border-white/10 hover:border-[#D4AF37] text-[11px] font-semibold tracking-widest uppercase py-3 rounded-xl transition-all duration-300 cursor-pointer">
-                    Add To Cart Selection
+                    Purchase
                   </button>
+                  </Link>
                 </div>
               </div>
             ))}
@@ -225,6 +247,9 @@ export default function ShopPage() {
         )}
 
       </div>
+
+      {/* Renders your exact global drawer tracking engine */}
+      <CartDrawer isOpen={isDrawerOpen} onClose={() => setIsDrawerOpen(false)} />
     </main>
   );
 }

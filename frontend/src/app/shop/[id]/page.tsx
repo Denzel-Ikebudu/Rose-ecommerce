@@ -79,7 +79,7 @@ export default function ProductDetailsPage() {
           <h3 className="font-serif text-xl font-light text-red-400 mb-2">Formulation Fetch Error</h3>
           <p className="text-xs text-[#F9F8F3]/60 font-light mb-6">{error || "Instance missing."}</p>
           <Link href="/shop" className="inline-flex items-center gap-2 bg-[#D4AF37] text-[#1C2B24] text-xs font-semibold tracking-widest uppercase px-6 py-3 rounded-full hover:bg-[#F9F8F3] transition-colors">
-            Return to Apothecary Shop
+            Return to Shop
           </Link>
         </div>
       </div>
@@ -95,14 +95,14 @@ export default function ProductDetailsPage() {
           onClick={() => router.back()} 
           className="inline-flex items-center gap-2 text-xs font-medium tracking-widest uppercase text-[#F9F8F3]/60 hover:text-[#D4AF37] transition-colors duration-200 mb-12 cursor-pointer bg-transparent border-none"
         >
-          <ArrowLeft className="w-4 h-4" /> Return to Catalog
+          <ArrowLeft className="w-4 h-4" /> Return to Shop
         </button>
 
         {/* Master Details Panel */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-16 items-start">
           
           {/* Left Canvas: Product Image Frame */}
-          <div className="bg-white/5 border border-white/10 rounded-2xl overflow-hidden backdrop-blur-sm aspect-[4/5] relative">
+          <div className="bg-white/5 h-[450px] border border-white/10 rounded-2xl overflow-hidden backdrop-blur-sm aspect-[4/5] relative">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img 
               src={product.image} 
@@ -125,7 +125,7 @@ export default function ProductDetailsPage() {
             <div className="w-full h-[1px] bg-white/10" />
 
             <div className="space-y-4">
-              <h3 className="text-xs font-semibold tracking-wider uppercase text-[#F9F8F3]/70">Composition Profile & Ritual</h3>
+              <h3 className="text-xs font-semibold tracking-wider uppercase text-[#F9F8F3]/70">Composition Profile</h3>
               <p className="text-sm text-[#F9F8F3]/70 font-light leading-relaxed whitespace-pre-line">
                 {product.description}
               </p>
@@ -164,7 +164,7 @@ export default function ProductDetailsPage() {
                 ) : (
                   <ShoppingCart className="w-4 h-4" />
                 )}
-                {isSubmitting ? "Allocating Selection..." : "Initiate Allocation To Selection"}
+                {isSubmitting ? "Adding to cart..." : "add to cart"}
               </button>
             </div>
 

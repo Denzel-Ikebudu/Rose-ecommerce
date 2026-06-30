@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
-import ProductCard, { type ProductCardProps } from "./ProductCard"; 
+import ProductCard, { type ProductCardProps } from "./ProductCard";
 import { MotionItem, MotionGridContainer } from "./MotionWrapper";
 
 interface FeaturedProductsProps {
@@ -11,21 +11,21 @@ export default function FeaturedProducts({ products }: FeaturedProductsProps) {
   return (
     <section className="w-full bg-herbal-cream text-black py-24 px-6">
       <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-start">
-        
+
         {/* LEFT COLUMN: Clean Brand Hook */}
         <MotionItem direction="left">
-          <h2 className="font-serif text-4xl font-light tracking-tight leading-tight">
-            Daily essentials to support  digestion, skin, and immune health.
+          <h2 className="font-serif text-4xl font-light tracking-tight leading-tight text-neutral-950">
+            Daily wellness essentials for your gut, skin, and immune health.
           </h2>
-          <p className="font-sans text-sm sm:text-base text-black/70 font-light leading-relaxed max-w-md">
-            Science-backed symbiotics and postbiotics that target your gut microbiome to benefit your entire body.
+          <p className="font-sans text-sm sm:text-base text-neutral-600 font-light leading-relaxed max-w-md">
+            Clean, science-backed supplements designed to balance your body from the inside out.
           </p>
           <div className="pt-2 md:pt-22">
-            <Link 
-              href="/shop" 
+            <Link
+              href="/shop"
               className="group inline-flex items-center gap-2 bg-herbal-dark border border-herbal-dark text-herbal-cream hover:bg-black text-xs font-semibold tracking-widest uppercase px-8 py-4 rounded-full transition-all duration-300 shadow-md"
             >
-              Shop Now 
+              Shop Now
               <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
             </Link>
           </div>
@@ -37,7 +37,7 @@ export default function FeaturedProducts({ products }: FeaturedProductsProps) {
             <MotionItem key={product.id} direction="up">
               {/* Spreading properties perfectly matches ProductCardProps now */}
               <ProductCard {...product} />
-              
+
               <div className="mt-4">
                 <Link
                   href={`/shop/${product.id}`}

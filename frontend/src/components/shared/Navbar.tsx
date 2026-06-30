@@ -29,10 +29,10 @@ export default function Navbar() {
           {/* Logo Brand / Identity */}
           <Link href="/" className="flex flex-col tracking-tight group">
             <span className="font-serif text-lg font-semibold uppercase tracking-wider text-herbal-cream">
-              Rose of Sharon
+              Stars of Dan
             </span>
-            <span className="text-[10px] tracking-[0.25em] text-herbal-accent uppercase -mt-1 font-sans font-medium">
-              Tradomedicals
+            <span className="text-[12px] tracking-[0.25em] text-herbal-accent uppercase -mt-1 font-sans font-medium">
+              Limited
             </span>
           </Link>
 
@@ -52,19 +52,19 @@ export default function Navbar() {
 
           {/* Action Icons Panel */}
           <div className="flex items-center gap-5">
-            <button className="text-herbal-cream/80 hover:text-white transition-colors p-1" aria-label="Search">
-              <Search className="w-5 h-5 stroke-[1.5]" />
-            </button>
-            <button className="text-herbal-cream/80 hover:text-white transition-colors p-1" aria-label="Account">
-              <User className="w-5 h-5 stroke-[1.5]" />
-            </button>
+            <a href="/auth">
+              <button className="text-herbal-cream/80 hover:text-white transition-colors p-1" aria-label="Account">
+                <User className="w-5 h-5 stroke-[1.5]" />
+              </button>
+            </a>
             
             {/* Reactive Cart Trigger */}
             <button 
               onClick={() => setIsCartOpen(true)}
-              className="text-herbal-cream/80 hover:text-white transition-colors p-1 relative bg-transparent border-none cursor-pointer" 
+              className="flex gap-1 items-center text-black rounded-[30px] transition-colors px-2 py-1 relative bg-white border-none cursor-pointer" 
               aria-label="Cart"
             >
+              Cart
               <ShoppingBag className="w-5 h-5 stroke-[1.5]" />
               
               {totalItemCount > 0 && (

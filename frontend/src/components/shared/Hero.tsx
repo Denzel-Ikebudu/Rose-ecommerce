@@ -16,7 +16,7 @@ export default function Hero() {
           transition={{ duration: 1.6, ease: [0.16, 1, 0.3, 1] }}
           className="w-full h-full bg-cover bg-center"
           style={{ 
-            backgroundImage: "url('/hero-background.png')" //  Fixed path string wrapper
+            backgroundImage: "url('/hero-background.png')"
           }}
         />
         {/* Cinematic Linear Shadow Mask */}
@@ -47,16 +47,16 @@ export default function Hero() {
 
           <motion.div variants={FADE_UP} className="flex flex-wrap gap-4">
             <Link 
-              href="/clinic/book"
+              href="shop"
               className="inline-flex items-center justify-center bg-herbal-cream hover:bg-white text-herbal-dark font-sans text-sm font-medium uppercase tracking-wider px-8 py-4 rounded-full transition-all duration-300 shadow-sm"
             >
-              Book Consultation
+              Shop Now
             </Link>
             <Link 
-              href="/shop"
+              href="/contact"
               className="inline-flex items-center justify-center bg-transparent border border-white/20 hover:border-white/60 text-white font-sans text-sm font-medium uppercase tracking-wider px-8 py-4 rounded-full transition-all duration-300"
             >
-              Explore Formulas
+              Book Consultation
             </Link>
           </motion.div>
         </motion.div>
