@@ -7,6 +7,7 @@ import { useCart } from "@/context/CartContext";
 import Link from "next/link";
 import { usePaystackPayment } from "react-paystack";
 
+export const dynamic = "force-dynamic";
 export default function CheckoutPage() {
   const { cart, refreshCart } = useCart();
   const router = useRouter();
