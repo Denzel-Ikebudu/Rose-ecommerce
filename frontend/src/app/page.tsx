@@ -2,6 +2,8 @@ import Navbar from "@/components/shared/Navbar";
 import Hero from "@/components/shared/Hero";
 import FeaturedProducts from "@/components/shared/FeaturedProducts";
 
+export const dynamic = "force-dynamic";
+
 async function getProducts() {
   try {
     // Dynamically look for the production environment variable or fall back to localhost
