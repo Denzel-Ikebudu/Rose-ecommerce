@@ -4,9 +4,13 @@ import FeaturedProducts from "@/components/shared/FeaturedProducts";
 
 async function getProducts() {
   try {
-    const response = await fetch("http://127.0.0.1:8000/api/products/", {
+    // Dynamically look for the production environment variable or fall back to localhost
+    const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000";
+    
+    const response = await fetch(`${baseUrl}/api/products/`, {
       cache: "no-store",
     });
+    
     if (!response.ok) throw new Error(`API error status: ${response.status}`);
     return await response.json();
   } catch (error) {
