@@ -33,6 +33,9 @@ export default function CheckoutPage() {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
+  // Dynamically resolve base API context path
+  const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+
   // Paystack Configuration Properties
   const config = {
     reference: `RST-${new Date().getTime().toString()}`, // Unique tracking string
@@ -47,7 +50,7 @@ export default function CheckoutPage() {
   // Separate backend dispatch worker called strictly upon gateway collection success
   const sendOrderToBackend = async (paystackReference: string) => {
     try {
-      const res = await fetch("http://localhost:8000/api/cart/checkout/", {
+      const res = await fetch(`${baseUrl}/api/cart/checkout/`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include", // Packages Django's guest sessionid cookies safely
@@ -209,7 +212,7 @@ export default function CheckoutPage() {
                 <div key={item.id} className="flex gap-4 items-center text-sm">
                   <div className="w-12 h-14 bg-[#1C2B24]/40 rounded border border-white/10 overflow-hidden flex-shrink-0">
                     <img 
-                      src={item.product.image.startsWith('http') ? item.product.image : `http://localhost:8000${item.product.image}`} 
+                      src={item.product.image.startsWith('http') ? item.product.image : `${baseUrl}${item.product.image}`} 
                       alt={item.product.name} 
                       className="w-full h-full object-cover" 
                     />
