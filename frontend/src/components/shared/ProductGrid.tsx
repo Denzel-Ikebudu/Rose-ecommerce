@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import ProductCard from "./ProductCard";
+import { Variants } from "framer-motion";
 
 interface DBProduct {
   id: number;
@@ -29,7 +30,7 @@ const ITEM_VARIANTS = {
   animate: { 
     opacity: 1, 
     y: 0, 
-    transition: { type: "spring", stiffness: 90, damping: 16 } 
+    transition: { type: "spring" as const, stiffness: 90, damping: 16 } 
   }
 };
 
