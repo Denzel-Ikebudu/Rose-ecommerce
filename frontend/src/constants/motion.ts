@@ -11,7 +11,7 @@ export const FADE_UP = {
   initial: { opacity: 0, y: 20 },
   animate: { opacity: 1, y: 0, transition: SMOOTH_SPRING },
   exit: { opacity: 0, y: -20, transition: { duration: 0.2 } },
-};
+} as const;
 
 export const STAGGER_CONTAINER = {
   animate: {
@@ -19,4 +19,4 @@ export const STAGGER_CONTAINER = {
       staggerChildren: 0.08,
     },
   },
-};
+} as const;
