@@ -33,7 +33,7 @@ export default function ProductDetailsPage() {
       if (!params?.id) return;
       setIsLoading(true);
       try {
-        const res = await fetch(`http://localhost:8000/api/products/${params.id}/`);
+       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/products/${params.id}/`);
         if (!res.ok) {
           if (res.status === 404) throw new Error("This formulation does not exist or has been archived.");
           throw new Error("Failed to pull formulation specification profiles.");
