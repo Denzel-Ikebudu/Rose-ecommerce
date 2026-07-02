@@ -16,6 +16,11 @@ interface Product {
     image?: string;
 }
 
+interface Category {
+    id: number;
+    name: string;
+}
+
 export default function AdminDashboardPage() {
     // --- AUTHENTICATION STATES ---
     const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -26,13 +31,14 @@ export default function AdminDashboardPage() {
 
     // --- INVENTORY & FILTERING STATES ---
     const [products, setProducts] = useState<Product[]>([]);
+    const [categories, setCategories] = useState<Category[]>([]);
     const [fetchLoading, setFetchLoading] = useState(false);
     const [deletingId, setDeletingId] = useState<number | null>(null);
     const [searchQuery, setSearchQuery] = useState("");
     const [selectedCategoryFilter, setSelectedCategoryFilter] = useState("all");
     
     // --- BULK ADJUSTMENT STATES ---
-    const [bulkCategory, setBulkCategory] = useState("1");
+    const [bulkCategory, setBulkCategory] = useState("");
     const [bulkPercentage, setBulkPercentage] = useState("");
     const [isBulkProcessing, setIsBulkProcessing] = useState(false);
 
@@ -43,7 +49,7 @@ export default function AdminDashboardPage() {
     const [name, setName] = useState("");
     const [price, setPrice] = useState("");
     const [description, setDescription] = useState("");
-    const [category, setCategory] = useState("1");
+    const [category, setCategory] = useState("");
     const [stock, setStock] = useState("100");
     const [isAvailable, setIsAvailable] = useState(true);
     const [image, setImage] = useState<File | null>(null);
@@ -66,6 +72,28 @@ export default function AdminDashboardPage() {
         }
     }, [isAuthenticated]);
 
+    // --- FETCH LIVE CATEGORIES FROM DJANGO ADMIN ---
+    useEffect(() => {
+        const fetchCategories = async () => {
+            try {
+                const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/categories/`);
+                if (res.ok) {
+                    const data = await res.json();
+                    const list = Array.isArray(data) ? data : data.results || [];
+                    setCategories(list);
+                    // Default the form + bulk selector to the first real category once loaded
+                    if (list.length > 0) {
+                        setCategory((prev) => prev || list[0].id.toString());
+                        setBulkCategory((prev) => prev || list[0].id.toString());
+                    }
+                }
+            } catch (err) {
+                console.error("Failed to load categories:", err);
+            }
+        };
+        fetchCategories();
+    }, []);
+
     // --- HANDLER: FETCH ACTIVE INVENTORY ---
     const fetchActiveInventory = async () => {
         setFetchLoading(true);
@@ -73,7 +101,6 @@ export default function AdminDashboardPage() {
             const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/products/`);
             if (response.ok) {
                 const data = await response.json();
-                // Ensure dynamic fields fallback to typing requirements correctly
                 const sanitized = (Array.isArray(data) ? data : data.results || []).map((p: any) => ({
                     ...p,
                     stock: p.stock !== undefined ? Number(p.stock) : 100,
@@ -88,16 +115,13 @@ export default function AdminDashboardPage() {
         }
     };
 
-    // --- DYNAMIC COMPUTATION: ANALYTICS HUB METRICS ---
     const metrics = useMemo(() => {
         const totalItems = products.length;
         const lowStockCount = products.filter(p => p.stock <= 10).length;
-        // Mocking estimated storefront metrics based on active structural elements for visual completeness
         const totalEstimatedRevenue = products.reduce((acc, p) => acc + (parseFloat(p.price) * 12), 0);
         return { totalItems, lowStockCount, totalEstimatedRevenue };
     }, [products]);
 
-    // --- CLIENT-SIDE REAL-TIME FILTERING PIPELINE ---
     const filteredProducts = useMemo(() => {
         return products.filter((product) => {
             const matchesSearch = product.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
@@ -107,11 +131,8 @@ export default function AdminDashboardPage() {
         });
     }, [products, searchQuery, selectedCategoryFilter]);
 
-    // --- HANDLER: INLINE QUICK MODIFICATIONS (STOCK/AVAILABILITY) ---
     const handleInlineUpdate = async (productId: number, fieldsToUpdate: Partial<Product>) => {
         const token = Cookies.get("admin_access_token");
-        
-        // Optimistic UI updates setup
         setProducts(prev => prev.map(p => p.id === productId ? { ...p, ...fieldsToUpdate } : p));
 
         try {
@@ -127,11 +148,10 @@ export default function AdminDashboardPage() {
             if (!response.ok) throw new Error();
         } catch (err) {
             setStatusMessage({ type: "error", text: "Failed to broadcast inline operational updates. Rolling back changes." });
-            fetchActiveInventory(); // Revert to server reality
+            fetchActiveInventory();
         }
     };
 
-    // --- HANDLER: GLOBAL BULK PRICE SCALER ---
     const handleBulkPriceAdjustment = async (e: React.FormEvent) => {
         e.preventDefault();
         const scalar = parseFloat(bulkPercentage);
@@ -168,7 +188,6 @@ export default function AdminDashboardPage() {
         }
     };
 
-    // --- HANDLER: SET FORM FOR EDIT MODE ---
     const startEditing = (product: Product) => {
         setEditingProduct(product);
         setName(product.name);
@@ -187,7 +206,7 @@ export default function AdminDashboardPage() {
         setName("");
         setPrice("");
         setDescription("");
-        setCategory("1");
+        setCategory(categories[0]?.id.toString() || "");
         setStock("100");
         setIsAvailable(true);
         setImage(null);
@@ -195,7 +214,6 @@ export default function AdminDashboardPage() {
         if (fileInputRef.current) fileInputRef.current.value = "";
     };
 
-    // --- HANDLER: CLIENT-SIDE SOFT DELETE ---
     const handleSoftDelete = async (productId: number, productName: string, e: React.MouseEvent) => {
         e.stopPropagation();
         if (!confirm(`Are you sure you want to completely remove "${productName}" from the customer shop view?`)) return;
@@ -224,7 +242,6 @@ export default function AdminDashboardPage() {
         }
     };
 
-    // --- HANDLER: LOGIN / AUTHENTICATION ---
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
         setAuthLoading(true);
@@ -237,7 +254,7 @@ export default function AdminDashboardPage() {
                 body: JSON.stringify({ username, password }),
             });
 
-            if (!response.ok) throw new Error("Invalid formulation credentials credentials.");
+            if (!response.ok) throw new Error("Invalid credentials.");
             const data = await response.json();
 
             Cookies.set("admin_access_token", data.access, { expires: 1 });
@@ -261,7 +278,6 @@ export default function AdminDashboardPage() {
         }
     };
 
-    // --- HANDLER: DUAL FORM DISPATCH ---
     const handleFormSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!name || !price || !description || !stock) {
@@ -289,7 +305,9 @@ export default function AdminDashboardPage() {
 
         try {
             const token = Cookies.get("admin_access_token");
-            const url = editingProduct ? `${process.env.NEXT_PUBLIC_API_URL}/api/products/${editingProduct.id}/` : "${process.env.NEXT_PUBLIC_API_URL}/api/products/";
+            const url = editingProduct
+                ? `${process.env.NEXT_PUBLIC_API_URL}/api/products/${editingProduct.id}/`
+                : `${process.env.NEXT_PUBLIC_API_URL}/api/products/`;
             const method = editingProduct ? "PATCH" : "POST";
 
             const response = await fetch(url, {
@@ -348,7 +366,6 @@ export default function AdminDashboardPage() {
         <main className="min-h-screen bg-[#1C2B24] text-[#F9F8F3] font-sans selection:bg-[#D4AF37] selection:text-[#1C2B24] py-16 px-6">
             <div className="max-w-7xl mx-auto">
 
-                {/* Top Nav Header Block */}
                 <div className="mb-10">
                     <Link href="/" className="inline-flex items-center gap-2 text-xs font-medium tracking-widest uppercase text-[#F9F8F3]/60 hover:text-[#D4AF37] transition-colors duration-200">
                         <ArrowLeft className="w-4 h-4" /> Return To Storefront
@@ -362,7 +379,6 @@ export default function AdminDashboardPage() {
                     </div>
                 </div>
 
-                {/* FEATURE 1: HIGH FIDELITY ANALYTICS HUB METRICS */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
                     <div className="bg-white/5 border border-white/10 p-6 rounded-2xl backdrop-blur-sm flex items-center justify-between">
                         <div>
@@ -394,13 +410,10 @@ export default function AdminDashboardPage() {
                     </div>
                 )}
 
-                {/* Dashboard Operations Grid Split Layout */}
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
                     
-                    {/* LEFT PANEL COLUMN */}
                     <div className="lg:col-span-5 space-y-6">
 
-                        {/* FEATURE 4: BULK PRICE ADJUSTMENT SCALE KNOB */}
                         <form onSubmit={handleBulkPriceAdjustment} className="bg-white/5 border border-white/10 p-5 rounded-2xl backdrop-blur-sm space-y-4">
                             <div>
                                 <h3 className="text-xs font-semibold tracking-wider uppercase text-[#D4AF37]">Bulk Price Calibration Engine</h3>
@@ -408,9 +421,9 @@ export default function AdminDashboardPage() {
                             </div>
                             <div className="grid grid-cols-3 gap-3">
                                 <select value={bulkCategory} onChange={(e) => setBulkCategory(e.target.value)} className="col-span-1 bg-[#1C2B24]/80 border border-white/10 rounded-lg text-xs px-2 text-white/90 focus:outline-none focus:border-[#D4AF37] cursor-pointer">
-                                    <option value="1">Teas</option>
-                                    <option value="2">Drugs</option>
-                                    <option value="3">Seeds</option>
+                                    {categories.map((cat) => (
+                                        <option key={cat.id} value={cat.id.toString()}>{cat.name}</option>
+                                    ))}
                                 </select>
                                 <input type="number" step="0.1" required value={bulkPercentage} onChange={(e) => setBulkPercentage(e.target.value)} placeholder="e.g., 10 or -5" className="col-span-1 bg-[#1C2B24]/80 border border-white/10 rounded-lg text-xs px-3 text-white placeholder-white/20 focus:outline-none focus:border-[#D4AF37]" />
                                 <button type="submit" disabled={isBulkProcessing} className="col-span-1 bg-white/10 hover:bg-[#D4AF37] hover:text-[#1C2B24] disabled:opacity-40 text-[10px] font-semibold uppercase tracking-wider rounded-lg transition-colors flex items-center justify-center cursor-pointer">
@@ -419,7 +432,6 @@ export default function AdminDashboardPage() {
                             </div>
                         </form>
 
-                        {/* LIVE SHOWROOM VIEWPORT CATALOG NODE */}
                         <div className="bg-white/5 border border-white/10 p-6 rounded-2xl backdrop-blur-sm space-y-5">
                             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                                 <div>
@@ -431,16 +443,18 @@ export default function AdminDashboardPage() {
                                 )}
                             </div>
 
-                            {/* FEATURE 5: INTERACTIVE LIVE SEARCH & FILTER MATRIX PILLS */}
                             <div className="space-y-3">
                                 <div className="relative">
                                     <Search className="w-4 h-4 text-white/30 absolute left-3 top-1/2 -translate-y-1/2" />
                                     <input type="text" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} placeholder="Search live parameters names or context keywords..." className="w-full bg-[#1C2B24]/60 border border-white/10 rounded-xl pl-9 pr-4 py-2.5 text-xs font-light text-white placeholder-white/30 focus:outline-none focus:border-[#D4AF37]" />
                                 </div>
                                 <div className="flex flex-wrap gap-1.5">
-                                    {["all", "1", "2", "3"].map((catId) => (
-                                        <button key={catId} onClick={() => setSelectedCategoryFilter(catId)} className={`text-[10px] font-semibold tracking-wider uppercase px-3 py-1.5 rounded-md transition-colors cursor-pointer ${selectedCategoryFilter === catId ? "bg-[#D4AF37] text-[#1C2B24]" : "bg-white/5 hover:bg-white/10 text-white/70"}`}>
-                                            {catId === "all" ? "All Instances" : catId === "1" ? "Herbal Teas" : catId === "2" ? "Herbal Drugs" : "Herbal Seeds"}
+                                    <button onClick={() => setSelectedCategoryFilter("all")} className={`text-[10px] font-semibold tracking-wider uppercase px-3 py-1.5 rounded-md transition-colors cursor-pointer ${selectedCategoryFilter === "all" ? "bg-[#D4AF37] text-[#1C2B24]" : "bg-white/5 hover:bg-white/10 text-white/70"}`}>
+                                        All Instances
+                                    </button>
+                                    {categories.map((cat) => (
+                                        <button key={cat.id} onClick={() => setSelectedCategoryFilter(cat.id.toString())} className={`text-[10px] font-semibold tracking-wider uppercase px-3 py-1.5 rounded-md transition-colors cursor-pointer ${selectedCategoryFilter === cat.id.toString() ? "bg-[#D4AF37] text-[#1C2B24]" : "bg-white/5 hover:bg-white/10 text-white/70"}`}>
+                                            {cat.name}
                                         </button>
                                     ))}
                                 </div>
@@ -465,7 +479,6 @@ export default function AdminDashboardPage() {
                                                 </div>
                                             </div>
 
-                                            {/* FEATURE 2: INLINE STOCK MATRIX ADJUSTMENT CONTROLS */}
                                             <div className="flex items-center justify-between border-t border-white/5 pt-3 mt-1" onClick={(e) => e.stopPropagation()}>
                                                 <div className="flex items-center gap-2">
                                                     <span className="text-[10px] text-[#F9F8F3]/40 uppercase font-semibold tracking-wider">Quantities Node:</span>
@@ -499,7 +512,6 @@ export default function AdminDashboardPage() {
                         </div>
                     </div>
 
-                    {/* RIGHT PANEL COLUMN: DUAL MULTI-ARCHETYPE FORM CONTROL */}
                     <form onSubmit={handleFormSubmit} className="lg:col-span-7 space-y-6 bg-white/5 border border-white/10 p-8 sm:p-10 rounded-2xl backdrop-blur-sm">
                         <div>
                             <h2 className="text-xs font-semibold tracking-wider uppercase text-[#D4AF37]">{editingProduct ? `Updating Context Node: ${editingProduct.name}` : "Addition Matrix Engine"}</h2>
@@ -521,9 +533,9 @@ export default function AdminDashboardPage() {
                             <div className="flex flex-col gap-2">
                                 <label className="text-xs font-semibold tracking-wider uppercase text-[#F9F8F3]/70">Inventory Category Node Set</label>
                                 <select value={category} onChange={(e) => setCategory(e.target.value)} className="w-full bg-[#1C2B24]/60 border border-white/10 rounded-lg px-4 py-3.5 text-sm font-light text-white/90 focus:outline-none focus:border-[#D4AF37] appearance-none cursor-pointer">
-                                    <option value="1" className="bg-[#1C2B24]">Herbal Teas</option>
-                                    <option value="2" className="bg-[#1C2B24]">Herbal Drugs</option>
-                                    <option value="3" className="bg-[#1C2B24]">Herbal Seeds</option>
+                                    {categories.map((cat) => (
+                                        <option key={cat.id} value={cat.id.toString()} className="bg-[#1C2B24]">{cat.name}</option>
+                                    ))}
                                 </select>
                             </div>
                             <div className="flex flex-col gap-2">
