@@ -42,7 +42,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   const refreshCart = async () => {
     try {
       // Include credentials to handle Django session backend cookies cleanly
-      const res = await fetch("${process.env.NEXT_PUBLIC_API_URL}/api/cart/current/", {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/cart/current/`, {
         method: "GET",
         credentials: "include"
       });
@@ -63,7 +63,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
   const addToCart = async (productId: number, quantity = 1) => {
     try {
-      const res = await fetch("${process.env.NEXT_PUBLIC_API_URL}/api/cart/add/", {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/cart/add/`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
