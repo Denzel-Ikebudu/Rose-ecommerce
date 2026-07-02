@@ -54,7 +54,7 @@ export default function ShopPage() {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const res = await fetch("http://localhost:8000/api/categories/");
+       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/categories/`);
         if (res.ok) {
           const data = await res.json();
           setCategories(Array.isArray(data) ? data : []);
@@ -81,7 +81,7 @@ export default function ShopPage() {
           params.append("search", debouncedSearch.trim());
         }
         
-        const url = `http://localhost:8000/api/products/?${params.toString()}`;
+        const url = `${process.env.NEXT_PUBLIC_API_URL}/api/products/?${params.toString()}`;
         const res = await fetch(url);
         if (!res.ok) throw new Error("Transmission error fetching catalog records.");
         

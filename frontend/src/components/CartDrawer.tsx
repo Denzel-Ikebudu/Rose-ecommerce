@@ -53,7 +53,7 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                                     <div className="w-20 h-24 bg-[#1C2B24]/40 rounded-lg overflow-hidden border border-white/10 flex-shrink-0">
                                         {/* eslint-disable-next-line @next/next/no-img-element */}
                                         <img
-                                            src={item.product.image.startsWith('http') ? item.product.image : `http://localhost:8000${item.product.image}`}
+                                            src={item.product.image.startsWith('http') ? item.product.image : `${process.env.NEXT_PUBLIC_API_URL}${item.product.image}`}
                                             alt={item.product.name}
                                             className="w-full h-full object-cover"
                                         />

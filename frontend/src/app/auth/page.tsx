@@ -23,7 +23,7 @@ export default function AuthPortal() {
   const handleGoogleBackendExchange = async (accessToken: string) => {
     setLoading(true);
     try {
-      const response = await fetch("http://localhost:8000/api/auth/google-exchange/", {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/google-exchange/`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ access_token: accessToken }),
@@ -54,7 +54,7 @@ export default function AuthPortal() {
     const payload = isSignUp ? formData : { username: formData.email, password: formData.password };
 
     try {
-        const response = await fetch(`http://localhost:8000${endpoint}`, {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}${endpoint}`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(payload),

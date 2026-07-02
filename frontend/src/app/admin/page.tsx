@@ -70,7 +70,7 @@ export default function AdminDashboardPage() {
     const fetchActiveInventory = async () => {
         setFetchLoading(true);
         try {
-            const response = await fetch("http://localhost:8000/api/products/");
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/products/`);
             if (response.ok) {
                 const data = await response.json();
                 // Ensure dynamic fields fallback to typing requirements correctly
@@ -115,7 +115,7 @@ export default function AdminDashboardPage() {
         setProducts(prev => prev.map(p => p.id === productId ? { ...p, ...fieldsToUpdate } : p));
 
         try {
-            const response = await fetch(`http://localhost:8000/api/products/${productId}/`, {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/products/${productId}/`, {
                 method: "PATCH",
                 headers: {
                     "Authorization": `Bearer ${token}`,
@@ -148,7 +148,7 @@ export default function AdminDashboardPage() {
                 const currentPrice = parseFloat(product.price);
                 const computedNewPrice = (currentPrice * (1 + scalar / 100)).toFixed(2);
                 
-                return fetch(`http://localhost:8000/api/products/${product.id}/`, {
+                return fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/products/${product.id}/`, {
                     method: "PATCH",
                     headers: {
                         "Authorization": `Bearer ${token}`,
@@ -204,7 +204,7 @@ export default function AdminDashboardPage() {
         const token = Cookies.get("admin_access_token");
 
         try {
-            const response = await fetch(`http://localhost:8000/api/products/${productId}/`, {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/products/${productId}/`, {
                 method: "DELETE",
                 headers: {
                     "Authorization": `Bearer ${token}`,
@@ -231,7 +231,7 @@ export default function AdminDashboardPage() {
         setAuthError(null);
 
         try {
-            const response = await fetch("http://localhost:8000/api/token/", {
+            const response = await fetch("${process.env.NEXT_PUBLIC_API_URL}/api/token/", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ username, password }),
@@ -289,7 +289,7 @@ export default function AdminDashboardPage() {
 
         try {
             const token = Cookies.get("admin_access_token");
-            const url = editingProduct ? `http://localhost:8000/api/products/${editingProduct.id}/` : "http://localhost:8000/api/products/";
+            const url = editingProduct ? `${process.env.NEXT_PUBLIC_API_URL}/api/products/${editingProduct.id}/` : "${process.env.NEXT_PUBLIC_API_URL}/api/products/";
             const method = editingProduct ? "PATCH" : "POST";
 
             const response = await fetch(url, {

@@ -42,7 +42,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   const refreshCart = async () => {
     try {
       // Include credentials to handle Django session backend cookies cleanly
-      const res = await fetch("http://localhost:8000/api/cart/current/", {
+      const res = await fetch("${process.env.NEXT_PUBLIC_API_URL}/api/cart/current/", {
         method: "GET",
         credentials: "include"
       });
@@ -63,7 +63,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
   const addToCart = async (productId: number, quantity = 1) => {
     try {
-      const res = await fetch("http://localhost:8000/api/cart/add/", {
+      const res = await fetch("${process.env.NEXT_PUBLIC_API_URL}/api/cart/add/", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
@@ -80,7 +80,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
   const updateQuantity = async (itemId: number, quantity: number) => {
     try {
-      const res = await fetch(`http://localhost:8000/api/cart/update/${itemId}/`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/cart/update/${itemId}/`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
@@ -97,7 +97,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
   const removeFromCart = async (itemId: number) => {
     try {
-      const res = await fetch(`http://localhost:8000/api/cart/remove/${itemId}/`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/cart/remove/${itemId}/`, {
         method: "DELETE",
         credentials: "include"
       });

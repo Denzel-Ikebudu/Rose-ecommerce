@@ -34,5 +34,7 @@ __pycache__/
 *$py.class
 db.sqlite3
 .venv
+.venv-1
+venv-1/
 venv/
 env/
