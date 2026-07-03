@@ -2,9 +2,10 @@
 
 import React, { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { ArrowLeft, Loader2, ShoppingCart, ShieldCheck, Truck, RefreshCw } from "lucide-react";
+import { ArrowLeft, Loader2, ShoppingCart, ShieldCheck, Truck, RefreshCw, ShoppingBag } from "lucide-react";
 import Link from "next/link";
 import { useCart } from "@/context/CartContext";
+import CartDrawer from "@/components/CartDrawer";
 
 interface Product {
   id: number;
@@ -18,7 +19,7 @@ interface Product {
 export default function ProductDetailsPage() {
   const params = useParams();
   const router = useRouter();
-  const { addToCart } = useCart();
+  const { cart, addToCart } = useCart();
 
   // Core Management States
   const [product, setProduct] = useState<Product | null>(null);
@@ -26,6 +27,10 @@ export default function ProductDetailsPage() {
   const [error, setError] = useState<string | null>(null);
   const [quantity, setQuantity] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isBuyingNow, setIsBuyingNow] = useState(false);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+
+  const totalItemCount = cart?.items.reduce((acc, item) => acc + item.quantity, 0) || 0;
 
   // Fetch Formulation Specification Profiles from Django
   useEffect(() => {
@@ -63,6 +68,19 @@ export default function ProductDetailsPage() {
     }
   };
 
+  // Handle direct purchase: add to cart, then jump straight to checkout
+  const handleBuyNowAction = async () => {
+    if (!product) return;
+    setIsBuyingNow(true);
+    try {
+      await addToCart(product.id, quantity);
+      router.push("/checkout");
+    } catch (err) {
+      console.error("Failed to process direct purchase:", err);
+      setIsBuyingNow(false);
+    }
+  };
+
   if (isLoading) {
     return (
       <div className="min-h-screen bg-[#1C2B24] flex flex-col items-center justify-center gap-4 text-[#F9F8F3]">
@@ -89,14 +107,30 @@ export default function ProductDetailsPage() {
   return (
     <main className="min-h-screen bg-[#1C2B24] text-[#F9F8F3] font-sans selection:bg-[#D4AF37] selection:text-[#1C2B24] py-16 px-6">
       <div className="max-w-6xl mx-auto">
-        
-        {/* Breadcrumb back navigation */}
-        <button 
-          onClick={() => router.back()} 
-          className="inline-flex items-center gap-2 text-xs font-medium tracking-widest uppercase text-[#F9F8F3]/60 hover:text-[#D4AF37] transition-colors duration-200 mb-12 cursor-pointer bg-transparent border-none"
-        >
-          <ArrowLeft className="w-4 h-4" /> Return to Shop
-        </button>
+
+        {/* Breadcrumb back navigation + Cart trigger */}
+        <div className="flex items-center justify-between mb-12">
+          <button 
+            onClick={() => router.back()} 
+            className="inline-flex items-center gap-2 text-xs font-medium tracking-widest uppercase text-[#F9F8F3]/60 hover:text-[#D4AF37] transition-colors duration-200 cursor-pointer bg-transparent border-none"
+          >
+            <ArrowLeft className="w-4 h-4" /> Return to Shop
+          </button>
+
+          <button 
+            onClick={() => setIsDrawerOpen(true)}
+            className="flex gap-1 items-center text-black rounded-[30px] transition-colors px-4 py-2 relative bg-white border-none cursor-pointer text-xs font-medium uppercase tracking-wider" 
+            aria-label="Cart"
+          >
+            Cart
+            <ShoppingBag className="w-4 h-4 stroke-[1.5]" />
+            {totalItemCount > 0 && (
+              <span className="absolute -top-1 -right-1.5 w-4 h-4 bg-herbal-accent text-herbal-dark text-[10px] font-bold rounded-full flex items-center justify-center scale-90 animate-fade-in">
+                {totalItemCount}
+              </span>
+            )}
+          </button>
+        </div>
 
         {/* Master Details Panel */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-16 items-start">
@@ -133,38 +167,45 @@ export default function ProductDetailsPage() {
 
             <div className="w-full h-[1px] bg-white/10" />
 
-            {/* Interaction Row: Quantity Counter and Add to Cart Button */}
-            <div className="flex flex-col sm:flex-row gap-4 items-stretch sm:items-center">
-              
-              {/* Counter Segment */}
-              <div className="flex items-center justify-between border border-white/10 bg-[#1C2B24]/40 rounded-xl p-1 h-14 sm:w-32">
-                <button 
-                  onClick={() => setQuantity(prev => Math.max(1, prev - 1))}
-                  className="w-10 h-full flex items-center justify-center text-lg text-[#F9F8F3]/60 hover:text-[#D4AF37] transition-colors cursor-pointer bg-transparent border-none"
-                >
-                  -
-                </button>
-                <span className="text-sm font-medium">{quantity}</span>
-                <button 
-                  onClick={() => setQuantity(prev => prev + 1)}
-                  className="w-10 h-full flex items-center justify-center text-lg text-[#F9F8F3]/60 hover:text-[#D4AF37] transition-colors cursor-pointer bg-transparent border-none"
-                >
-                  +
-                </button>
-              </div>
+            {/* Interaction Row: Quantity Counter */}
+            <div className="flex items-center justify-between border border-white/10 bg-[#1C2B24]/40 rounded-xl p-1 h-14 sm:w-32">
+              <button 
+                onClick={() => setQuantity(prev => Math.max(1, prev - 1))}
+                className="w-10 h-full flex items-center justify-center text-lg text-[#F9F8F3]/60 hover:text-[#D4AF37] transition-colors cursor-pointer bg-transparent border-none"
+              >
+                -
+              </button>
+              <span className="text-sm font-medium">{quantity}</span>
+              <button 
+                onClick={() => setQuantity(prev => prev + 1)}
+                className="w-10 h-full flex items-center justify-center text-lg text-[#F9F8F3]/60 hover:text-[#D4AF37] transition-colors cursor-pointer bg-transparent border-none"
+              >
+                +
+              </button>
+            </div>
 
-              {/* Action Button Segment */}
+            {/* Action Buttons: Add to Cart + Buy Now */}
+            <div className="flex flex-col sm:flex-row gap-4">
               <button 
                 onClick={handleAddToCartAction}
-                disabled={isSubmitting}
-                className="flex-grow h-14 flex items-center justify-center gap-3 bg-[#D4AF37] text-[#1C2B24] hover:bg-[#F9F8F3] disabled:bg-white/10 disabled:text-white/40 text-xs font-semibold tracking-widest uppercase rounded-xl transition-all duration-300 shadow-lg cursor-pointer border-none"
+                disabled={isSubmitting || isBuyingNow}
+                className="flex-1 h-14 flex items-center justify-center gap-3 border border-[#D4AF37]/40 text-[#D4AF37] hover:bg-[#D4AF37]/10 disabled:bg-white/5 disabled:text-white/40 disabled:border-white/10 text-xs font-semibold tracking-widest uppercase rounded-xl transition-all duration-300 cursor-pointer bg-transparent"
               >
                 {isSubmitting ? (
                   <Loader2 className="w-4 h-4 animate-spin" />
                 ) : (
                   <ShoppingCart className="w-4 h-4" />
                 )}
-                {isSubmitting ? "Adding to cart..." : "add to cart"}
+                {isSubmitting ? "Adding..." : "Add to Cart"}
+              </button>
+
+              <button 
+                onClick={handleBuyNowAction}
+                disabled={isSubmitting || isBuyingNow}
+                className="flex-1 h-14 flex items-center justify-center gap-3 bg-[#D4AF37] text-[#1C2B24] hover:bg-[#F9F8F3] disabled:bg-white/10 disabled:text-white/40 text-xs font-semibold tracking-widest uppercase rounded-xl transition-all duration-300 shadow-lg cursor-pointer border-none"
+              >
+                {isBuyingNow ? <Loader2 className="w-4 h-4 animate-spin" /> : null}
+                {isBuyingNow ? "Processing..." : "Buy Now"}
               </button>
             </div>
 
@@ -188,6 +229,8 @@ export default function ProductDetailsPage() {
         </div>
 
       </div>
+
+      <CartDrawer isOpen={isDrawerOpen} onClose={() => setIsDrawerOpen(false)} />
     </main>
   );
 }

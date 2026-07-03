@@ -4,6 +4,7 @@ import React from "react";
 import { X, ShoppingBag, Trash2, Plus, Minus, ArrowRight } from "lucide-react";
 import { useCart } from "@/context/CartContext";
 import Link from "next/link";
+import Cookies from "js-cookie";
 
 interface CartDrawerProps {
     isOpen: boolean;
@@ -12,6 +13,7 @@ interface CartDrawerProps {
 
 export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
     const { cart, updateQuantity, removeFromCart } = useCart();
+    const isLoggedIn = !!Cookies.get("access_token");
 
     if (!isOpen) return null;
 
@@ -39,6 +41,18 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                             <X className="w-5 h-5" />
                         </button>
                     </div>
+
+                    {/* Contextual sign-in nudge: only shown to guests with items in cart */}
+                    {!isLoggedIn && cart && cart.items.length > 0 && (
+                        <Link
+                            href="/auth"
+                            onClick={onClose}
+                            className="mx-6 mt-4 flex items-center justify-between gap-3 px-4 py-3 bg-[#D4AF37]/10 border border-[#D4AF37]/30 rounded-xl text-xs text-[#D4AF37] hover:bg-[#D4AF37]/15 transition-colors"
+                        >
+                            <span className="font-light">Sign in to save this cart across your devices</span>
+                            <ArrowRight className="w-3.5 h-3.5 flex-shrink-0" />
+                        </Link>
+                    )}
 
                     {/* Drawer Body Items Stack */}
                     <div className="flex-1 overflow-y-auto p-6 space-y-6 custom-scrollbar">

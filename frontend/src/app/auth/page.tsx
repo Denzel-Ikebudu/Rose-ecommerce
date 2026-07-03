@@ -32,7 +32,7 @@ export default function AuthPortal() {
       const data = await response.json();
       if (!response.ok) throw new Error(data.error || "Google calibration match failed.");
 
-      Cookies.set("admin_access_token", data.token, { expires: 1 });
+      Cookies.set("access_token", data.token, { expires: 1 });
       window.location.href = "/dashboard";
     } catch (err: any) {
       setError(err.message);
@@ -64,8 +64,8 @@ export default function AuthPortal() {
         if (!response.ok) throw new Error(data.detail || data.error || "Authentication failed.");
 
         const token = isSignUp ? data.token : data.access;
-        Cookies.set("admin_access_token", token, { expires: 1 });
-        window.location.href = "/dashboard";
+        Cookies.set("access_token", token, { expires: 1 });
+        window.location.href = "/";
     } catch (err: any) {
         setError(err.message);
     } finally {

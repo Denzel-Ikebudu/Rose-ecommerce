@@ -1,21 +1,37 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, ShoppingBag, Search, User } from "lucide-react";
+import { Menu, X, ShoppingBag, Search, User, LogOut } from "lucide-react";
 import { NAV_LINKS } from "@/constants/navigation";
 import { FADE_UP, SMOOTH_SPRING } from "@/constants/motion";
 import { useCart } from "@/context/CartContext";
 import CartDrawer from "../CartDrawer"; // Adjust this path relative to your directory structure
+import Cookies from "js-cookie";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [isCartOpen, setIsCartOpen] = useState(false);
+  const [isAccountMenuOpen, setIsAccountMenuOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const { cart } = useCart();
 
   // Dynamically compute absolute allocation quantities 
   const totalItemCount = cart?.items.reduce((acc, item) => acc + item.quantity, 0) || 0;
+
+  // Check customer auth state on mount
+  useEffect(() => {
+    const token = Cookies.get("access_token");
+    setIsLoggedIn(!!token);
+  }, []);
+
+  const handleLogout = () => {
+    Cookies.remove("access_token");
+    setIsLoggedIn(false);
+    setIsAccountMenuOpen(false);
+    window.location.href = "/";
+  };
 
   return (
     <>
@@ -51,12 +67,53 @@ export default function Navbar() {
           </nav>
 
           {/* Action Icons Panel */}
-          <div className="flex items-center gap-5">
-            <a href="/auth">
-              <button className="text-herbal-cream/80 hover:text-white transition-colors p-1" aria-label="Account">
-                <User className="w-5 h-5 stroke-[1.5]" />
-              </button>
-            </a>
+          <div className="flex items-center gap-3">
+            
+            {/* Account: pill CTA when logged out, dropdown when logged in */}
+            <div className="relative">
+              {isLoggedIn ? (
+                <>
+                  <button
+                    onClick={() => setIsAccountMenuOpen(!isAccountMenuOpen)}
+                    className="flex items-center gap-1.5 text-herbal-cream/80 hover:text-white transition-colors p-1"
+                    aria-label="Account menu"
+                  >
+                    <User className="w-5 h-5 stroke-[1.5]" />
+                    <span className="w-1.5 h-1.5 rounded-full bg-herbal-accent" />
+                  </button>
+
+                  <AnimatePresence>
+                    {isAccountMenuOpen && (
+                      <motion.div
+                        initial={{ opacity: 0, y: -8 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -8 }}
+                        transition={{ duration: 0.15 }}
+                        className="absolute right-0 top-full mt-3 w-44 bg-herbal-dark border border-white/10 rounded-xl shadow-xl overflow-hidden"
+                      >
+                        <button
+                          onClick={handleLogout}
+                          className="w-full flex items-center gap-2 px-4 py-3 text-sm text-herbal-cream/80 hover:text-white hover:bg-white/5 transition-colors"
+                        >
+                          <LogOut className="w-4 h-4 stroke-[1.5]" />
+                          Sign Out
+                        </button>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </>
+              ) : (
+                <Link href="/auth">
+                  <button 
+                    className="flex gap-1.5 items-center text-herbal-dark rounded-[30px] transition-colors px-4 py-2 bg-herbal-accent hover:bg-herbal-cream border-none cursor-pointer text-sm font-medium"
+                    aria-label="Sign In"
+                  >
+                    <User className="w-4 h-4 stroke-[2]" />
+                    Sign In
+                  </button>
+                </Link>
+              )}
+            </div>
             
             {/* Reactive Cart Trigger */}
             <button 

@@ -1,6 +1,7 @@
 "use client";
 
 import React, { createContext, useContext, useState, useEffect } from "react";
+import Cookies from "js-cookie";
 
 interface Product {
   id: number;
@@ -34,17 +35,25 @@ interface CartContextType {
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
+// Builds headers with the JWT attached, if the user is logged in
+function getAuthHeaders(extra: Record<string, string> = {}) {
+  const token = Cookies.get("access_token");
+  return {
+    ...extra,
+    ...(token ? { Authorization: `Bearer ${token}` } : {}),
+  };
+}
+
 export function CartProvider({ children }: { children: React.ReactNode }) {
   const [cart, setCart] = useState<Cart | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Synchronize cart records on initial frame load
   const refreshCart = async () => {
     try {
-      // Include credentials to handle Django session backend cookies cleanly
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/cart/current/`, {
         method: "GET",
-        credentials: "include"
+        credentials: "include",
+        headers: getAuthHeaders(),
       });
       if (res.ok) {
         const data = await res.json();
@@ -65,7 +74,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     try {
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/cart/add/`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: getAuthHeaders({ "Content-Type": "application/json" }),
         credentials: "include",
         body: JSON.stringify({ product_id: productId, quantity }),
       });
@@ -82,7 +91,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     try {
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/cart/update/${itemId}/`, {
         method: "PATCH",
-        headers: { "Content-Type": "application/json" },
+        headers: getAuthHeaders({ "Content-Type": "application/json" }),
         credentials: "include",
         body: JSON.stringify({ quantity }),
       });
@@ -99,7 +108,8 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     try {
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/cart/remove/${itemId}/`, {
         method: "DELETE",
-        credentials: "include"
+        credentials: "include",
+        headers: getAuthHeaders(),
       });
       if (res.ok) {
         const updatedCart = await res.json();
