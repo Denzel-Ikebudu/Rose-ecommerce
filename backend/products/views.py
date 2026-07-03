@@ -7,6 +7,7 @@ from django.shortcuts import get_object_or_404
 from .models import Category, Product, Cart, CartItem, Order, OrderItem
 from .serializers import CategorySerializer, ProductSerializer, CartSerializer, CartItemSerializer
 from rest_framework.authentication import SessionAuthentication
+from rest_framework_simplejwt.authentication import JWTAuthentication
 
 class UnsafeSessionAuthentication(SessionAuthentication):
     def enforce_csrf(self, request):
@@ -70,7 +71,7 @@ class ProductViewSet(viewsets.ModelViewSet):
 
 class CartViewSet(viewsets.ViewSet):
     permission_classes = [AllowAny]  # Both members and anonymous guests can interact here
-    authentication_classes = [UnsafeSessionAuthentication]
+    authentication_classes = [JWTAuthentication, UnsafeSessionAuthentication]
 
     def _get_or_create_cart(self, request):
         """
@@ -79,10 +80,27 @@ class CartViewSet(viewsets.ViewSet):
         # Scenario 1: User is securely authenticated via login session
         if request.user.is_authenticated:
             cart, created = Cart.objects.get_or_create(user=request.user)
+
+            session_key = request.session.session_key
+            if session_key:
+                guest_cart = Cart.objects.filter(session_key=session_key).exclude(id=cart.id).first()
+                if guest_cart:
+                    for guest_item in guest_cart.items.all():
+                        user_item, item_created = CartItem.objects.get_or_create(
+                            cart=cart, product=guest_item.product
+                        )
+                        if item_created:
+                            user_item.quantity = guest_item.quantity
+                        else:
+                            user_item.quantity += guest_item.quantity
+                        user_item.save()
+                    guest_cart.delete()
+
             return cart
 
         # Scenario 2: User is an anonymous guest window-shopping
         if not request.session.session_key:
+            request.session.create()
             request.session.create()
             # CRITICAL FIX: Write directly to the session dictionary to force 
             # Django to persist this specific session key back to the browser.
