@@ -4,7 +4,8 @@ import React from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { FADE_UP, STAGGER_CONTAINER } from "@/constants/motion";
-import FaqAccordion from "@/components/FaqAccordion";
+import FaqAccordion from "@/components/shared/FaqAccordion";
+import Navbar from "@/components/shared/Navbar";
 
 const FAQ_ITEMS = [
   {
@@ -37,6 +38,8 @@ const FAQ_ITEMS = [
 export default function FaqPage() {
   return (
     <main className="bg-herbal-dark text-herbal-cream min-h-screen">
+      <Navbar />
+
       <section className="px-6 pt-40 pb-16">
         <motion.div
           variants={STAGGER_CONTAINER}

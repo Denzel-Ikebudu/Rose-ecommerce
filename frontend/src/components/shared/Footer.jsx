@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { Instagram, Facebook, Twitter, ArrowRight, Leaf } from "lucide-react";
+import { ArrowRight, Leaf } from "lucide-react";
 import { FADE_UP, STAGGER_CONTAINER } from "@/constants/motion";
 
 const EXPLORE_LINKS = [
@@ -14,16 +14,10 @@ const EXPLORE_LINKS = [
 ];
 
 const LEARN_LINKS = [
-  { href: "/learn/understanding-herbs", label: "Understanding Herbs" },
-  { href: "/learn/spice-education", label: "Spice Education" },
-  { href: "/learn/wellness-guides", label: "Wellness Guides" },
-  { href: "/learn/healthy-recipes", label: "Healthy Recipes" },
-];
-
-const SOCIALS = [
-  { href: "https://instagram.com", label: "Instagram", Icon: Instagram },
-  { href: "https://facebook.com", label: "Facebook", Icon: Facebook },
-  { href: "https://twitter.com", label: "Twitter", Icon: Twitter },
+  { href: "/learn#understanding-herbs", label: "Understanding Herbs" },
+  { href: "/learn#spice-education", label: "Spice Education" },
+  { href: "/learn#wellness-guides", label: "Wellness Guides" },
+  { href: "/learn#healthy-recipes", label: "Healthy Recipes" },
 ];
 
 export default function Footer() {
@@ -65,20 +59,6 @@ export default function Footer() {
               Herbal products, wholesome natural foods, and authentic spices,
               carefully selected to support healthier, more grounded living.
             </p>
-            <div className="flex items-center gap-3 mt-6">
-              {SOCIALS.map(({ href, label, Icon }) => (
-                <a
-                  key={label}
-                  href={href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label={label}
-                  className="w-9 h-9 flex items-center justify-center rounded-full border border-white/10 text-herbal-cream/70 hover:text-herbal-dark hover:bg-herbal-accent hover:border-herbal-accent transition-all duration-300"
-                >
-                  <Icon className="w-4 h-4 stroke-[1.5]" />
-                </a>
-              ))}
-            </div>
           </motion.div>
 
           {/* Explore column */}

@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { Mail, Phone, MapPin, Send, CheckCircle2 } from "lucide-react";
 import { FADE_UP, STAGGER_CONTAINER } from "@/constants/motion";
+import Navbar from "@/components/shared/Navbar";
 
 const CONTACT_DETAILS = [
   {
@@ -55,6 +56,8 @@ export default function ContactPage() {
 
   return (
     <main className="bg-herbal-dark text-herbal-cream min-h-screen">
+      <Navbar />
+
       <section className="px-6 pt-40 pb-16">
         <motion.div
           variants={STAGGER_CONTAINER}

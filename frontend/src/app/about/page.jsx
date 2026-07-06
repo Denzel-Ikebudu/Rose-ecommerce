@@ -5,6 +5,7 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { ShieldCheck, Leaf, Users, GraduationCap, Sprout, Sparkles } from "lucide-react";
 import { FADE_UP, STAGGER_CONTAINER } from "@/constants/motion";
+import Navbar from "@/components/shared/Navbar";
 
 const CORE_VALUES = [
   {
@@ -57,6 +58,8 @@ const WHY_US = [
 export default function AboutPage() {
   return (
     <main className="bg-herbal-dark text-herbal-cream">
+      <Navbar />
+
       {/* Page intro */}
       <section className="relative w-full pt-40 pb-24 px-6 overflow-hidden">
         <div className="pointer-events-none absolute -top-32 left-1/2 -translate-x-1/2 w-[600px] h-[600px] rounded-full bg-herbal-accent/5 blur-3xl" />
