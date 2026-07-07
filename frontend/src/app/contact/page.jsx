@@ -10,14 +10,14 @@ const CONTACT_DETAILS = [
   {
     Icon: Mail,
     label: "Email",
-    value: "hello@starsofdan.com",
-    href: "mailto:hello@starsofdan.com",
+    value: "starsofadventures@gmail.com",
+    href: "mailto:starsofadventures@gmail.com",
   },
   {
     Icon: Phone,
     label: "Phone",
-    value: "+234 000 000 0000",
-    href: "tel:+2340000000000",
+    value: "+234 904 881 3369",
+    href: "tel:+2349048813369",
   },
   {
     Icon: MapPin,
