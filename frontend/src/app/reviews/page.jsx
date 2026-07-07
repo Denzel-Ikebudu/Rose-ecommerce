@@ -222,96 +222,9 @@ export default function ReviewsPage() {
       </section>
 
       {/* Write a review trigger */}
-      <section className="px-6 pb-10">
-        <div className="max-w-4xl mx-auto flex justify-center">
-          <button
-            onClick={() => setShowForm(!showForm)}
-            className="inline-flex items-center gap-2 font-sans text-sm font-medium uppercase tracking-wider text-herbal-dark bg-herbal-cream hover:bg-white px-6 py-3.5 rounded-full transition-all duration-300 border-none cursor-pointer"
-          >
-            <MessageSquarePlus className="w-4 h-4 stroke-[2]" />
-            {showForm ? "Close" : "Write a Review"}
-          </button>
-        </div>
-      </section>
+    
 
-      {/* Review form */}
-      {showForm && (
-        <section className="px-6 pb-16">
-          <motion.form
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3 }}
-            onSubmit={handleSubmit}
-            className="max-w-2xl mx-auto border border-white/10 rounded-2xl p-8 bg-white/[0.02] flex flex-col gap-5"
-          >
-            <div>
-              <label className="block font-sans text-xs uppercase tracking-[0.2em] text-herbal-cream/40 mb-2">
-                Your Rating
-              </label>
-              <LeafRating
-                value={form.rating}
-                onChange={(v) => setForm({ ...form, rating: v })}
-                size="w-6 h-6"
-              />
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-              <div>
-                <label htmlFor="rname" className="block font-sans text-xs uppercase tracking-[0.2em] text-herbal-cream/40 mb-2">
-                  Your Name
-                </label>
-                <input
-                  id="rname"
-                  required
-                  value={form.name}
-                  onChange={(e) => setForm({ ...form, name: e.target.value })}
-                  placeholder="Adaeze O."
-                  className="w-full bg-transparent border border-white/15 focus:border-herbal-accent rounded-xl px-4 py-3 text-sm font-sans text-herbal-cream placeholder:text-herbal-cream/30 outline-none transition-colors"
-                />
-              </div>
-              <div>
-                <label htmlFor="rproduct" className="block font-sans text-xs uppercase tracking-[0.2em] text-herbal-cream/40 mb-2">
-                  Product
-                </label>
-                <input
-                  id="rproduct"
-                  required
-                  value={form.product}
-                  onChange={(e) => setForm({ ...form, product: e.target.value })}
-                  placeholder="Turmeric & Ginger Blend"
-                  className="w-full bg-transparent border border-white/15 focus:border-herbal-accent rounded-xl px-4 py-3 text-sm font-sans text-herbal-cream placeholder:text-herbal-cream/30 outline-none transition-colors"
-                />
-              </div>
-            </div>
-            <div>
-              <label htmlFor="rbody" className="block font-sans text-xs uppercase tracking-[0.2em] text-herbal-cream/40 mb-2">
-                Your Review
-              </label>
-              <textarea
-                id="rbody"
-                required
-                rows={4}
-                value={form.body}
-                onChange={(e) => setForm({ ...form, body: e.target.value })}
-                placeholder="Tell us how it worked for you"
-                className="w-full bg-transparent border border-white/15 focus:border-herbal-accent rounded-xl px-4 py-3 text-sm font-sans text-herbal-cream placeholder:text-herbal-cream/30 outline-none transition-colors resize-none"
-              />
-            </div>
-            {status === "error" && (
-              <p className="font-sans text-sm text-red-400">
-                Something went wrong submitting your review. Please try again.
-              </p>
-            )}
-            <button
-              type="submit"
-              disabled={status === "sending"}
-              className="self-start inline-flex items-center justify-center bg-herbal-accent hover:bg-herbal-cream disabled:opacity-60 text-herbal-dark font-sans text-sm font-medium uppercase tracking-wider px-8 py-3.5 rounded-full transition-all duration-300"
-            >
-              {status === "sending" ? "Submitting..." : "Submit Review"}
-            </button>
-          </motion.form>
-        </section>
-      )}
-
+    
       {/* Reviews grid */}
       <section className="px-6 pb-32">
         <motion.div
