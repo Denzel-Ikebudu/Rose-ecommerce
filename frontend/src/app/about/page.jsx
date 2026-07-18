@@ -1,7 +1,8 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { motion } from "framer-motion";
 import { ShieldCheck, Leaf, Users, GraduationCap, Sprout, Sparkles } from "lucide-react";
 import { FADE_UP, STAGGER_CONTAINER } from "@/constants/motion";
@@ -56,13 +57,51 @@ const WHY_US = [
 ];
 
 export default function AboutPage() {
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [reducedMotion, setReducedMotion] = useState(false);
+
+  useEffect(() => {
+    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+    setReducedMotion(mq.matches);
+    const handler = (e: MediaQueryListEvent) => setReducedMotion(e.matches);
+    mq.addEventListener("change", handler);
+    return () => mq.removeEventListener("change", handler);
+  }, []);
+
   return (
     <main className="bg-herbal-dark text-herbal-cream">
       <Navbar />
 
-      {/* Page intro */}
+      {/* Page intro — video background */}
       <section className="relative w-full pt-40 pb-24 px-6 overflow-hidden">
-        <div className="pointer-events-none absolute -top-32 left-1/2 -translate-x-1/2 w-[600px] h-[600px] rounded-full bg-herbal-accent/5 blur-3xl" />
+        <div className="absolute inset-0 -z-20">
+          {reducedMotion ? (
+            <Image
+              src="/images/Herb1.jpg"
+              alt=""
+              fill
+              priority
+              className="object-cover"
+            />
+          ) : (
+            <video
+              ref={videoRef}
+              className="w-full h-full object-cover"
+              autoPlay
+              muted
+              loop
+              playsInline
+              poster="/images/herb2.jpg"
+            >
+              <source src="/videos/bg.webm" type="video/webm" />
+              <source src="/videos/bg.mp4" type="video/mp4" />
+            </video>
+          )}
+          <div className="absolute inset-0 bg-herbal-dark/75" />
+          <div className="absolute inset-0 bg-gradient-to-b from-herbal-dark/30 via-herbal-dark/60 to-herbal-dark" />
+        </div>
+
+        <div className="pointer-events-none absolute -top-32 left-1/2 -translate-x-1/2 w-[600px] h-[600px] rounded-full bg-herbal-accent/5 blur-3xl -z-10" />
         <motion.div
           variants={STAGGER_CONTAINER}
           initial="initial"
@@ -92,22 +131,35 @@ export default function AboutPage() {
         </motion.div>
       </section>
 
-      {/* Story body */}
+      {/* Story body — text + image */}
       <section className="px-6 pb-24">
         <motion.div
-          variants={FADE_UP}
+          variants={STAGGER_CONTAINER}
           initial="initial"
           whileInView="animate"
           viewport={{ once: true, margin: "-100px" }}
-          className="max-w-3xl mx-auto"
+          className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-5 gap-10 md:gap-14 items-center"
         >
-          <p className="font-sans text-base text-herbal-cream/70 leading-relaxed">
-            Inspired by generations of traditional knowledge and supported by
-            modern quality practices, we are building a brand that people can
-            trust for quality, transparency, and education. Our journey
-            continues as we expand our range of products while remaining
-            committed to promoting healthier living, naturally.
-          </p>
+          <motion.div variants={FADE_UP} className="md:col-span-3">
+            <p className="font-sans text-base text-herbal-cream/70 leading-relaxed">
+              Inspired by generations of traditional knowledge and supported by
+              modern quality practices, we are building a brand that people can
+              trust for quality, transparency, and education. Our journey
+              continues as we expand our range of products while remaining
+              committed to promoting healthier living, naturally.
+            </p>
+          </motion.div>
+          <motion.div
+            variants={FADE_UP}
+            className="md:col-span-2 relative aspect-[4/5] rounded-2xl overflow-hidden border border-white/10"
+          >
+            <Image
+              src="/images/herb3.jpg"
+              alt="Natural herbs and ingredients used in Stars of Dan products"
+              fill
+              className="object-cover"
+            />
+          </motion.div>
         </motion.div>
       </section>
 
@@ -142,6 +194,30 @@ export default function AboutPage() {
               inspire confidence in natural solutions.
             </p>
           </motion.div>
+        </motion.div>
+      </section>
+
+      {/* Mood image band */}
+      <section className="px-6 pb-24">
+        <motion.div
+          variants={FADE_UP}
+          initial="initial"
+          whileInView="animate"
+          viewport={{ once: true, margin: "-100px" }}
+          className="relative max-w-6xl mx-auto h-[320px] sm:h-[400px] rounded-2xl overflow-hidden border border-white/10"
+        >
+          <Image
+            src="/images/herb4.jpg"
+            alt="Dried herbs and spices selected for Stars of Dan products"
+            fill
+            className="object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-herbal-dark/90 via-herbal-dark/10 to-transparent" />
+          <div className="absolute bottom-8 left-8 right-8">
+            <p className="font-serif text-xl sm:text-2xl text-herbal-cream max-w-md">
+              Every leaf, root, and spice is chosen before it ever reaches your shelf.
+            </p>
+          </div>
         </motion.div>
       </section>
 
@@ -211,15 +287,23 @@ export default function AboutPage() {
         </motion.div>
       </section>
 
-      {/* CTA */}
+      {/* CTA — image background */}
       <section className="px-6 pb-32">
         <motion.div
           variants={FADE_UP}
           initial="initial"
           whileInView="animate"
           viewport={{ once: true, margin: "-100px" }}
-          className="max-w-3xl mx-auto text-center border border-white/10 rounded-3xl p-14 bg-white/[0.02]"
+          className="relative max-w-3xl mx-auto text-center border border-white/10 rounded-3xl p-14 overflow-hidden"
         >
+          <Image
+            src="/images/herb2.jpg"
+            alt=""
+            fill
+            className="object-cover -z-10"
+          />
+          <div className="absolute inset-0 bg-herbal-dark/85 -z-10" />
+
           <h3 className="font-serif text-2xl sm:text-3xl text-herbal-cream mb-4">
             Join thousands embracing natural living
           </h3>
