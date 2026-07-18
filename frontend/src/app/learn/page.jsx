@@ -122,9 +122,9 @@ export default function LearnCentrePage() {
     <main className="bg-herbal-dark text-herbal-cream min-h-screen">
       <Navbar />
 
-      {/* Intro — hero image */}
+     {/* Intro — hero image */}
       <section className="relative px-6 pt-40 pb-16 overflow-hidden">
-        <div className="absolute inset-0 -z-10">
+        <div className="absolute inset-0 z-0">
           <Image
             src="/images/learn-centre/hero.jpg"
             alt=""
