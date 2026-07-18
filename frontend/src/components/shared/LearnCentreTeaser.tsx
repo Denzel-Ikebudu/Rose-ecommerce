@@ -50,7 +50,7 @@ export default function LearnCentreTeaser() {
             </h2>
           </div>
           <Link
-            href="/learn-centre"
+            href="/about"
             className="inline-flex items-center gap-2 font-sans text-sm text-herbal-accent hover:text-herbal-cream transition-colors duration-200"
           >
             Visit the Learn Centre
