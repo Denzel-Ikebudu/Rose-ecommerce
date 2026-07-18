@@ -93,8 +93,7 @@ export default function AboutPage() {
               playsInline
               poster="/images/herb2.jpg"
             >
-              <source src="/videos/bg.webm" type="video/webm" />
-              <source src="/videos/bg.mp4" type="video/mp4" />
+                          <source src="/videos/bg.mp4" type="video/mp4" />
             </video>
           )}
           <div className="absolute inset-0 bg-herbal-dark/75" />
@@ -317,7 +316,7 @@ export default function AboutPage() {
           >
             Shop Now
           </Link>
-        </motion.div>        git push --set-upstream origin frontend-only-updates-2        git push
+        </motion.div>       
       </section>
     </main>
   );
