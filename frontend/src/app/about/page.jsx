@@ -73,8 +73,8 @@ export default function AboutPage() {
       <Navbar />
 
       {/* Page intro — video background */}
-      <section className="relative w-full pt-40 pb-24 px-6 overflow-hidden">
-        <div className="absolute inset-0 -z-20">
+<section className="relative w-full pt-40 pb-24 px-6 overflow-hidden">
+        <div className="absolute inset-0 z-0">
           {reducedMotion ? (
             <Image
               src="/images/Herb1.jpg"
@@ -93,14 +93,14 @@ export default function AboutPage() {
               playsInline
               poster="/images/herb2.jpg"
             >
-                          <source src="/videos/bg.mp4" type="video/mp4" />
+              <source src="/videos/bg.mp4" type="video/mp4" />
             </video>
           )}
           <div className="absolute inset-0 bg-herbal-dark/75" />
           <div className="absolute inset-0 bg-gradient-to-b from-herbal-dark/30 via-herbal-dark/60 to-herbal-dark" />
         </div>
 
-        <div className="pointer-events-none absolute -top-32 left-1/2 -translate-x-1/2 w-[600px] h-[600px] rounded-full bg-herbal-accent/5 blur-3xl -z-10" />
+        <div className="pointer-events-none absolute -top-32 left-1/2 -translate-x-1/2 w-[600px] h-[600px] rounded-full bg-herbal-accent/5 blur-3xl z-0" />
         <motion.div
           variants={STAGGER_CONTAINER}
           initial="initial"
