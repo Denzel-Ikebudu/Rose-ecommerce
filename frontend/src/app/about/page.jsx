@@ -57,13 +57,13 @@ const WHY_US = [
 ];
 
 export default function AboutPage() {
-  const videoRef = useRef<HTMLVideoElement>(null);
+  const videoRef = useRef(null);
   const [reducedMotion, setReducedMotion] = useState(false);
 
   useEffect(() => {
     const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
     setReducedMotion(mq.matches);
-    const handler = (e: MediaQueryListEvent) => setReducedMotion(e.matches);
+    const handler = (e) => setReducedMotion(e.matches);
     mq.addEventListener("change", handler);
     return () => mq.removeEventListener("change", handler);
   }, []);
@@ -317,7 +317,7 @@ export default function AboutPage() {
           >
             Shop Now
           </Link>
-        </motion.div>
+        </motion.div>        git push --set-upstream origin frontend-only-updates-2        git push
       </section>
     </main>
   );
