@@ -23,7 +23,7 @@ export default function FeaturedProducts({ products }: FeaturedProductsProps) {
           <div className="pt-2 md:pt-22">
             <Link
               href="/shop"
-              className="group inline-flex items-center gap-2 bg-herbal-dark border border-herbal-dark text-herbal-cream hover:bg-black text-xs font-semibold tracking-widest uppercase px-8 py-4 rounded-full transition-all duration-300 shadow-md"
+              className="group inline-flex items-center gap-2 bg-herbal-primary border border-herbal-primary text-herbal-cream hover:bg-herbal-dark hover:border-herbal-dark text-xs font-semibold tracking-widest uppercase px-8 py-4 rounded-full transition-all duration-300 shadow-md"
             >
               Shop Now
               <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
@@ -41,7 +41,7 @@ export default function FeaturedProducts({ products }: FeaturedProductsProps) {
               <div className="mt-4">
                 <Link
                   href={`/shop/${product.id}`}
-                  className="group flex items-center justify-center gap-2 w-full bg-herbal-dark text-herbal-cream hover:bg-black text-xs font-medium tracking-wider uppercase py-4 rounded-full transition-colors duration-200"
+                  className="group flex items-center justify-center gap-2 w-full bg-herbal-primary text-herbal-cream hover:bg-herbal-dark text-xs font-medium tracking-wider uppercase py-4 rounded-full transition-colors duration-200"
                 >
                   Shop Now
                   <ArrowRight className="w-3.5 h-3.5 transition-transform duration-200 group-hover:translate-x-0.5" />

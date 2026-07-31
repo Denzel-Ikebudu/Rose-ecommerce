@@ -17,10 +17,10 @@ const TESTIMONIALS: Testimonial[] = [
 
 function TestimonialCard({ t }: { t: Testimonial }) {
   return (
-    <div className="shrink-0 w-[320px] sm:w-[380px] border border-white/10 rounded-2xl p-8 bg-white/[0.02] mx-3">
+    <div className="shrink-0 w-[320px] sm:w-[380px] border border-white/10 rounded-2xl p-8 bg-white/5 mx-3">
       <div className="flex gap-1 mb-4">
         {Array.from({ length: t.rating }).map((_, i) => (
-          <Star key={i} className="w-4 h-4 fill-herbal-accent text-herbal-accent" />
+          <Star key={i} className="w-4 h-4 fill-herbal-gold text-herbal-gold" />
         ))}
       </div>
       <p className="font-sans text-sm text-herbal-cream/75 leading-relaxed mb-6">
@@ -38,7 +38,7 @@ export default function TestimonialsTeaser() {
   const loop = [...TESTIMONIALS, ...TESTIMONIALS];
 
   return (
-    <section className="py-24 overflow-hidden">
+    <section className="py-24 overflow-hidden bg-herbal-dark">
       <motion.div
         initial={{ opacity: 0, y: 16 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -46,7 +46,7 @@ export default function TestimonialsTeaser() {
         transition={{ duration: 0.5, ease: "easeOut" }}
         className="px-6 max-w-3xl mx-auto text-center mb-12"
       >
-        <span className="font-sans text-xs uppercase tracking-[0.3em] text-herbal-accent">Reviews</span>
+        <span className="font-sans text-xs uppercase tracking-[0.3em] text-herbal-gold">Reviews</span>
         <h2 className="font-serif text-3xl sm:text-4xl text-herbal-cream mt-3">
           What our customers are saying
         </h2>
@@ -65,7 +65,7 @@ export default function TestimonialsTeaser() {
       <div className="text-center mt-12">
         <Link
           href="/reviews"
-          className="inline-flex items-center gap-2 font-sans text-sm text-herbal-accent hover:text-herbal-cream transition-colors duration-200"
+          className="inline-flex items-center gap-2 font-sans text-sm text-herbal-gold hover:text-herbal-cream transition-colors duration-200"
         >
           Read all reviews
           <ArrowRight className="w-4 h-4 stroke-[2]" />

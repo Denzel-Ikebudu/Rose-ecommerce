@@ -24,7 +24,7 @@ export default async function Home() {
   const featuredDbSlice = allProducts.slice(0, 3);
 
   return (
-    <main className="min-h-screen bg-herbal-dark antialiased selection:bg-herbal-accent selection:text-herbal-dark">
+    <main className="min-h-screen bg-herbal-cream text-herbal-dark antialiased selection:bg-herbal-accent selection:text-herbal-cream">
       <Navbar />
       <Hero />
       <TrustStats />

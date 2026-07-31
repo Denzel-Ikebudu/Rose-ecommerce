@@ -37,14 +37,14 @@ function Counter({ value, suffix = "" }: { value: number; suffix?: string }) {
   return (
     <span ref={ref} className="font-serif text-4xl sm:text-5xl text-herbal-cream tabular-nums">
       {display.toLocaleString()}
-      <span className="text-herbal-accent">{suffix}</span>
+      <span className="text-herbal-gold">{suffix}</span>
     </span>
   );
 }
 
 export default function TrustStats() {
   return (
-    <section className="px-6 py-20 border-y border-white/10">
+    <section className="px-6 py-20 border-y border-white/10 bg-herbal-dark">
       <motion.div
         initial={{ opacity: 0, y: 16 }}
         whileInView={{ opacity: 1, y: 0 }}

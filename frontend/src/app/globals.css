@@ -1,19 +1,23 @@
 @import "tailwindcss";
 
 @theme {
-  /* This automatically creates utilities like bg-herbal-dark and text-herbal-accent */
-  --color-herbal-dark: #1C2B24;
-  --color-herbal-primary: #2E4A3F;
-  --color-herbal-accent: #D4AF37;
-  --color-herbal-cream: #F9F8F3;
-  --color-herbal-muted: #7D8A83;
+  /* Updated palette: warm cream base + fresh green accent, replacing the dark green/gold identity */
+  --color-herbal-dark: #1C1C1A;      /* near-black, used for headings/text (kept name for compatibility) */
+  --color-herbal-primary: #3F7D4E;   /* fresh green — primary accent, buttons, links */
+  --color-herbal-accent: #3F7D4E;    /* alias so existing bg-herbal-accent / text-herbal-accent usages pick up green */
+  --color-herbal-cream: #FAF7F0;     /* warm cream background */
+  --color-herbal-muted: #6B7280;     /* muted gray for secondary/body text */
+  --color-herbal-sage: #E7F0E3;      /* soft sage tint for cards/feature tiles */
+  --color-herbal-gold: #C9A227;      /* small accent touches only — price, badges */
+  --font-sans: var(--font-montserrat);
 }
 
-/* Force the base canvas onto your premium brand identity green */
+/* Force the base canvas onto the new cream identity */
 body {
-  background-color: #1C2B24;
-  color: #F9F8F3;
+  background-color: #FAF7F0;
+  color: #1C1C1A;
 }
+
 @keyframes marquee {
   from { transform: translateX(0); }
   to { transform: translateX(-50%); }

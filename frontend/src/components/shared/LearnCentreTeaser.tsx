@@ -32,7 +32,7 @@ const FEATURED_TOPICS = [
 
 export default function LearnCentreTeaser() {
   return (
-    <section className="px-6 py-24">
+    <section className="px-6 py-24 bg-herbal-cream">
       <motion.div
         variants={STAGGER_CONTAINER}
         initial="initial"
@@ -42,16 +42,16 @@ export default function LearnCentreTeaser() {
       >
         <motion.div variants={FADE_UP} className="flex flex-wrap items-end justify-between gap-6 mb-12">
           <div>
-            <span className="font-sans text-xs uppercase tracking-[0.3em] text-herbal-accent">
+            <span className="font-sans text-xs uppercase tracking-[0.3em] text-herbal-primary">
               Learn Centre
             </span>
-            <h2 className="font-serif text-3xl sm:text-4xl text-herbal-cream mt-3">
+            <h2 className="font-serif text-3xl sm:text-4xl text-herbal-dark mt-3">
               Make informed decisions, not guesses
             </h2>
           </div>
           <Link
             href="/about"
-            className="inline-flex items-center gap-2 font-sans text-sm text-herbal-accent hover:text-herbal-cream transition-colors duration-200"
+            className="inline-flex items-center gap-2 font-sans text-sm text-herbal-primary hover:text-herbal-dark transition-colors duration-200"
           >
             Visit the Learn Centre
             <ArrowRight className="w-4 h-4 stroke-[2]" />
@@ -63,18 +63,18 @@ export default function LearnCentreTeaser() {
             <motion.div key={id} variants={FADE_UP}>
               <Link
                 href={`/learn-centre#${id}`}
-                className="group block h-full border border-white/10 rounded-2xl p-8 bg-white/[0.02] hover:bg-white/[0.04] hover:border-herbal-accent/30 transition-all duration-300"
+                className="group block h-full border border-herbal-dark/8 rounded-2xl p-8 bg-white hover:bg-herbal-sage/40 hover:border-herbal-primary/30 transition-all duration-300"
               >
                 <div className="flex items-center justify-between mb-6">
-                  <span className="w-11 h-11 flex items-center justify-center rounded-full border border-white/10 text-herbal-accent group-hover:border-herbal-accent/50 transition-colors duration-300">
+                  <span className="w-11 h-11 flex items-center justify-center rounded-full border border-herbal-dark/10 bg-herbal-sage text-herbal-primary group-hover:border-herbal-primary/40 transition-colors duration-300">
                     <Icon className="w-5 h-5 stroke-[1.5]" />
                   </span>
-                  <span className="font-serif text-xs tracking-[0.2em] text-herbal-cream/25 uppercase">
+                  <span className="font-serif text-xs tracking-[0.2em] text-herbal-muted/50 uppercase">
                     {mark}
                   </span>
                 </div>
-                <h4 className="font-serif text-lg text-herbal-cream mb-2">{title}</h4>
-                <p className="font-sans text-sm text-herbal-cream/55 leading-relaxed">{summary}</p>
+                <h4 className="font-serif text-lg text-herbal-dark mb-2">{title}</h4>
+                <p className="font-sans text-sm text-herbal-muted leading-relaxed">{summary}</p>
               </Link>
             </motion.div>
           ))}

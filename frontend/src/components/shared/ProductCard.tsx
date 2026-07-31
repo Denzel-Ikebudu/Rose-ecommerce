@@ -19,10 +19,10 @@ export default function ProductCard({ id, name, categoryName, price, image, desc
   }).format(Number(price));
 
   return (
-    <Link href={`/shop/${id}`} className="block border border-white/5 bg-white/[0.02] group overflow-hidden rounded-xl hover:border-white/10 transition-colors duration-300">
+    <Link href={`/shop/${id}`} className="block border border-herbal-dark/8 bg-white group overflow-hidden rounded-xl hover:border-herbal-primary/30 hover:shadow-md transition-all duration-300">
       
       {/* Media Window Container */}
-      <div className="aspect-square w-full overflow-hidden bg-white/[0.01] relative border-b border-white/5">
+      <div className="aspect-square w-full overflow-hidden bg-herbal-sage relative border-b border-herbal-dark/8">
         {image ? (
           <img 
             src={image} 
@@ -37,16 +37,16 @@ export default function ProductCard({ id, name, categoryName, price, image, desc
       </div>
 
       {/* Meta Text Blocks Content Layout */}
-      <div className="p-2">
+      <div className="p-4">
         <div className="flex items-center justify-between gap-4 mb-2">
-          <span className="text-[10px] font-semibold tracking-widest uppercase text-herbal-accent">
+          <span className="text-[10px] font-semibold tracking-widest uppercase text-herbal-primary">
             {categoryName}
           </span>
-          <span className="text-sm font-medium text-herbal-cream font-sans">
+          <span className="text-sm font-medium text-herbal-gold font-sans">
             {formattedPrice}
           </span>
         </div>
-        <h3 className="font-serif text-lg font-light tracking-tight text-black">
+        <h3 className="font-serif text-lg font-light tracking-tight text-herbal-dark">
           {name}
         </h3>
       </div>
