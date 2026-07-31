@@ -17,10 +17,8 @@ export default function Navbar() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const { cart } = useCart();
 
-  // Dynamically compute absolute allocation quantities 
   const totalItemCount = cart?.items.reduce((acc, item) => acc + item.quantity, 0) || 0;
 
-  // Check customer auth state on mount
   useEffect(() => {
     const token = Cookies.get("access_token");
     setIsLoggedIn(!!token);
@@ -41,13 +39,13 @@ export default function Navbar() {
         transition={{ duration: 0.5, ease: "easeOut" }}
         className="fixed top-0 left-0 right-0 z-50 bg-herbal-dark/90 backdrop-blur-md text-white border-b border-white/5"
       >
-        <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 h-20 flex items-center justify-between">
           {/* Logo Brand / Identity */}
-          <Link href="/" className="flex flex-col tracking-tight group">
-            <span className="font-serif text-lg font-semibold uppercase tracking-wider text-herbal-cream">
+          <Link href="/" className="flex flex-col tracking-tight group shrink-0">
+            <span className="font-serif text-base sm:text-lg font-semibold uppercase tracking-wider text-herbal-cream">
               Stars of Dan
             </span>
-            <span className="text-[12px] tracking-[0.25em] text-herbal-accent uppercase -mt-1 font-sans font-medium">
+            <span className="text-[10px] sm:text-[12px] tracking-[0.25em] text-herbal-accent uppercase -mt-1 font-sans font-medium">
               Limited
             </span>
           </Link>
@@ -67,15 +65,15 @@ export default function Navbar() {
           </nav>
 
           {/* Action Icons Panel */}
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-1.5 sm:gap-3">
             
-            {/* Account: pill CTA when logged out, dropdown when logged in */}
+            {/* Account: pill CTA on desktop, icon-only on mobile */}
             <div className="relative">
               {isLoggedIn ? (
                 <>
                   <button
                     onClick={() => setIsAccountMenuOpen(!isAccountMenuOpen)}
-                    className="flex items-center gap-1.5 text-herbal-cream/80 hover:text-white transition-colors p-1"
+                    className="flex items-center gap-1.5 text-herbal-cream/80 hover:text-white transition-colors p-2"
                     aria-label="Account menu"
                   >
                     <User className="w-5 h-5 stroke-[1.5]" />
@@ -105,11 +103,12 @@ export default function Navbar() {
               ) : (
                 <Link href="/auth">
                   <button 
-                    className="flex gap-1.5 items-center text-herbal-dark rounded-[30px] transition-colors px-4 py-2 bg-herbal-accent hover:bg-herbal-cream border-none cursor-pointer text-sm font-medium"
+                    className="flex items-center justify-center text-herbal-dark rounded-full transition-colors bg-herbal-accent hover:bg-herbal-cream border-none cursor-pointer text-sm font-medium
+                               w-10 h-10 sm:w-auto sm:h-auto sm:gap-1.5 sm:px-4 sm:py-2"
                     aria-label="Sign In"
                   >
                     <User className="w-4 h-4 stroke-[2]" />
-                    Sign In
+                    <span className="hidden sm:inline">Sign In</span>
                   </button>
                 </Link>
               )}
@@ -118,14 +117,15 @@ export default function Navbar() {
             {/* Reactive Cart Trigger */}
             <button 
               onClick={() => setIsCartOpen(true)}
-              className="flex gap-1 items-center text-black rounded-[30px] transition-colors px-2 py-1 relative bg-white border-none cursor-pointer" 
+              className="flex items-center justify-center text-black rounded-full transition-colors relative bg-white border-none cursor-pointer
+                         w-10 h-10 sm:w-auto sm:h-auto sm:gap-1 sm:px-2 sm:py-1" 
               aria-label="Cart"
             >
-              Cart
-              <ShoppingBag className="w-5 h-5 stroke-[1.5]" />
+              <span className="hidden sm:inline">Cart</span>
+              <ShoppingBag className="w-4 h-4 sm:w-5 sm:h-5 stroke-[1.5]" />
               
               {totalItemCount > 0 && (
-                <span className="absolute -top-1 -right-1.5 w-4 h-4 bg-herbal-accent text-herbal-dark text-[10px] font-bold rounded-full flex items-center justify-center scale-90 animate-fade-in">
+                <span className="absolute -top-1 -right-1 w-4 h-4 bg-herbal-accent text-herbal-dark text-[10px] font-bold rounded-full flex items-center justify-center scale-90 animate-fade-in">
                   {totalItemCount}
                 </span>
               )}
@@ -133,7 +133,7 @@ export default function Navbar() {
             
             {/* Mobile Trigger Button */}
             <button 
-              className="md:hidden text-white p-1 ml-1 bg-transparent border-none cursor-pointer"
+              className="md:hidden text-white p-2 bg-transparent border-none cursor-pointer"
               onClick={() => setIsOpen(!isOpen)}
               aria-label="Toggle Menu"
             >
