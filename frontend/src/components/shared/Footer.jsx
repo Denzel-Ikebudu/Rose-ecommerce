@@ -49,10 +49,10 @@ export default function Footer() {
           <motion.div variants={FADE_UP}>
             <div className="flex flex-col mb-5">
               <span className="font-serif text-xl font-semibold uppercase tracking-wider text-herbal-cream">
-                Stars of Dan
+                SODHERB
               </span>
               <span className="text-[11px] tracking-[0.25em] text-herbal-accent uppercase -mt-1 font-sans font-medium">
-                Limited
+                NATURALS
               </span>
             </div>
             <p className="font-sans text-sm text-herbal-cream/60 leading-relaxed max-w-xs">
@@ -155,7 +155,7 @@ export default function Footer() {
           className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pt-2"
         >
           <p className="font-sans text-xs text-herbal-cream/40">
-            © {new Date().getFullYear()} Stars of Dan Limited. All rights reserved.
+            © {new Date().getFullYear()} SODHERB NATURALS. All rights reserved.
           </p>
           <div className="flex items-center gap-6">
             <Link
