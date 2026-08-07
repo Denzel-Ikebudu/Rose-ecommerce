@@ -48,7 +48,7 @@ export default function Navbar() {
               alt="SODHERB NATURALS logo"
               width={40}
               height={40}
-              className="w-9 h-9 sm:w-10 sm:h-10 object-contain pt-2"
+              className="w-9 h-9 sm:w-10 sm:h-10 object-contain pb-2"
               priority
             />
             <div className="flex flex-col">
